@@ -9,7 +9,7 @@ export default function () {
       'mozjpeg'
     ];
 
-    for (let encoder in encoders) {
+    for (let encoder of encoders) {
       site.addEventListener('afterBuild', `npx @squoosh/cli --${encoder} auto --output-dir ${outputDir} ${input}`);
     }
   };
