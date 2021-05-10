@@ -1,5 +1,16 @@
 export default function () {
   return site => {
-    site.addEventListener('afterBuild', 'npx @squoosh/cli --mozjpeg auto _site/img/*.jpg');
+    const input = '_site/img/*.{jpg,avif,webp}';
+    const outputDir = '_site/img/';
+
+    const encoders = [
+      'avif',
+      'webp',
+      'mozjpeg'
+    ];
+
+    for (let encoder in encoders) {
+      site.addEventListener('afterBuild', `npx @squoosh/cli --${encoder} auto --output-dir ${outputDir} ${input}`);
+    }
   };
 }
