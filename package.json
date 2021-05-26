@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-tidal": "^1.2.0"
+  }
+}
