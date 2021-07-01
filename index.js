@@ -1,8 +1,8 @@
-import { posix, dirname } from 'https://deno.land/x/lume@v0.20.0/deps/path.js';
-import { DOMParser } from 'https://deno.land/x/lume@v0.20.0/deps/dom.js';
-import { exists } from 'https://deno.land/x/lume@v0.20.0/deps/fs.js';
+import { posix, dirname } from 'https://deno.land/x/lume@v0.24.0/deps/path.js';
+import { DOMParser } from 'https://deno.land/x/lume@v0.24.0/deps/dom.js';
+import { exists } from 'https://deno.land/x/lume@v0.24.0/deps/fs.js';
 
-import { documentToString } from 'https://deno.land/x/lume@v0.20.0/utils.js';
+import { documentToString } from 'https://deno.land/x/lume@v0.24.0/utils.js';
 
 const squooshTasks = [];
 
