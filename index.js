@@ -1,6 +1,6 @@
-import { posix, dirname } from 'https://deno.land/x/lume@v0.24.0/deps/path.js';
+import { posix, dirname } from 'https://deno.land/x/lume@v0.24.0/deps/path.ts';
 import { DOMParser } from 'https://deno.land/x/lume@v0.24.0/deps/dom.ts';
-import { exists } from 'https://deno.land/x/lume@v0.24.0/deps/fs.js';
+import { exists } from 'https://deno.land/x/lume@v0.24.0/deps/fs.ts';
 
 import { documentToString } from 'https://deno.land/x/lume@v0.24.0/utils.js';
 
