@@ -2,7 +2,7 @@ import { posix, dirname } from 'lume/deps/path.ts';
 import { DOMParser } from 'lume/deps/dom.ts';
 import { exists } from 'lume/deps/fs.ts';
 
-import { documentToString } from 'lume/utils.js';
+import { documentToString } from 'lume/core/utils.ts';
 
 const squooshTasks = [];
 
