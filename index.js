@@ -1,8 +1,8 @@
-import { posix, dirname } from 'https://deno.land/x/lume@v0.24.0/deps/path.ts';
-import { DOMParser } from 'https://deno.land/x/lume@v0.24.0/deps/dom.ts';
-import { exists } from 'https://deno.land/x/lume@v0.24.0/deps/fs.ts';
+import { posix, dirname } from 'lume/deps/path.ts';
+import { DOMParser } from 'lume/deps/dom.ts';
+import { exists } from 'lume/deps/fs.ts';
 
-import { documentToString } from 'https://deno.land/x/lume@v0.24.0/utils.js';
+import { documentToString } from 'lume/utils.js';
 
 const squooshTasks = [];
 
@@ -18,7 +18,7 @@ const mimeTypes = {
   'jpg': 'image/jpeg'
 };
 
-async function generatePictureElement (site, document, image) {
+async function generatePictureElement(site, document, image) {
   const url = posix.relative(site.options.location.pathname, image.getAttribute('src'));
 
   const width = parseInt(image.getAttribute('width'), 10);
@@ -56,9 +56,9 @@ async function generatePictureElement (site, document, image) {
       }
 
       return isMacOS ?
-      // macOS needs double wrapping around object.
+        // macOS needs double wrapping around object.
         `npx @squoosh/cli --resize '"{width: ${size}}"' --mozjpeg auto --avif auto --webp auto --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}` :
-      // Linux fails on double wrapping, do single.
+        // Linux fails on double wrapping, do single.
         `npx @squoosh/cli --resize '{width: ${size}}' --mozjpeg auto --avif auto --webp auto --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}`;
     })
   );
@@ -97,7 +97,7 @@ async function generatePictureElement (site, document, image) {
   return picture;
 }
 
-async function findAndOptimizeImages (site, page) {
+async function findAndOptimizeImages(site, page) {
   const parser = new DOMParser();
   const document = parser.parseFromString(page.content, 'text/html');
 
