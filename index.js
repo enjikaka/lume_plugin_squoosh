@@ -1,4 +1,4 @@
-import { posix, dirname } from 'lume/deps/path.ts';
+import { posix, dirname, extname, basename } from 'lume/deps/path.ts';
 import { DOMParser } from 'lume/deps/dom.ts';
 import { exists } from 'lume/deps/fs.ts';
 
@@ -10,12 +10,15 @@ let formats;
 const mimeTypes = {
   'avif': 'image/avif',
   'webp': 'image/webp',
-  'jpg': 'image/jpeg'
+  'jpg': 'image/jpeg',
+  'wp2': 'image/webp2',
+  'jxl': 'image/jxl'
 };
 
 async function generatePictureElement(site, document, image) {
   const url = posix.relative(site.options.location.pathname, image.getAttribute('src'));
-  const originalImageExtention = '.' + url.split('.').pop();
+  const originalImageExtention = extname(url);
+  const filename = basename(image.getAttribute('src')).split(extname(image.getAttribute('src')))[0];
 
   const width = parseInt(image.getAttribute('width'), 10);
   const srcset = image.getAttribute('data-srcset');
@@ -39,23 +42,35 @@ async function generatePictureElement(site, document, image) {
   const tasks = await Promise.all(
     sizes.map(async size => {
       const isMacOS = Deno.env.get('_system_type') === 'Darwin';
+      const formatsToRender = [];
 
-      const cachePath = posix.relative(
-        site.options.location.pathname,
-        `/_cache/${url}`.replace(originalImageExtention, `_${size}w${originalImageExtention}`)
-      );
+      const searches = formats.map(format => `_cache/${dirname(url)}/${filename}_${size}w.${format}`).map(async path => {
+        const found = await exists(path);
 
-      const cachePathExists = await exists(cachePath);
+        return { path, found };
+      });
 
-      if (cachePathExists) {
+      for await (const search of searches) {
+        if (!search.found) {
+          formatsToRender.push(extname(search.path));
+        }
+      }
+
+      const formatOptions = formatsToRender.map(format => {
+        const flag = format === 'jpg' ? 'mozjpeg' : format.split('.').pop();
+
+        return `--${flag} auto`;
+      }).join(' ');
+
+      if (formatOptions.length === 0) {
         return undefined;
       }
 
       return isMacOS ?
         // macOS needs double wrapping around object.
-        `npx @squoosh/cli --resize '"{width: ${size}}"' --mozjpeg auto --avif auto --webp auto --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}` :
+        `npx @squoosh/cli --resize '"{width: ${size}}"' ${formatOptions} --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}` :
         // Linux fails on double wrapping, do single.
-        `npx @squoosh/cli --resize '{width: ${size}}' --mozjpeg auto --avif auto --webp auto --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}`;
+        `npx @squoosh/cli --resize '{width: ${size}}' ${formatOptions} --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}`;
     })
   );
 
@@ -106,6 +121,11 @@ async function findAndOptimizeImages(site, page) {
   });
 }
 
+/**
+ *
+ * @param {'avif'|'jpg'|'webp'|'wp2'|'jxl'} _formats
+ * @returns
+ */
 export default function (_formats = [
   'webp',
   'avif'
