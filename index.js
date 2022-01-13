@@ -15,6 +15,7 @@ const mimeTypes = {
 
 async function generatePictureElement(site, document, image) {
   const url = posix.relative(site.options.location.pathname, image.getAttribute('src'));
+  const originalImageExtention = '.' + url.split('.').pop();
 
   const width = parseInt(image.getAttribute('width'), 10);
   const srcset = image.getAttribute('data-srcset');
@@ -41,7 +42,7 @@ async function generatePictureElement(site, document, image) {
 
       const cachePath = posix.relative(
         site.options.location.pathname,
-        `/_cache/${url}`.replace('.jpg', `_${size}w.jpg`)
+        `/_cache/${url}`.replace(originalImageExtention, `_${size}w${originalImageExtention}`)
       );
 
       const cachePathExists = await exists(cachePath);
@@ -66,7 +67,7 @@ async function generatePictureElement(site, document, image) {
 
   formats.forEach(format => {
     const newSrcset = sizes
-      .map(size => `/${url.replace('.jpg', `_${size}w.${format}`)} ${size}w`)
+      .map(size => `/${url.replace(originalImageExtention, `_${size}w.${format}`)} ${size}w`)
       .join(', ');
 
     const source = document.createElement('source');
@@ -79,7 +80,7 @@ async function generatePictureElement(site, document, image) {
 
   const img = document.createElement('img');
 
-  img.setAttribute('src', '/' + url.replace('.jpg', `_${sizes[0]}w.jpg`));
+  img.setAttribute('src', '/' + url.replace(originalImageExtention, `_${sizes[0]}w.${formats[0]}`));
   img.setAttribute('alt', image.getAttribute('alt'));
   img.setAttribute('width', image.getAttribute('width'));
   img.setAttribute('sizes', width + 'w');
@@ -106,8 +107,8 @@ async function findAndOptimizeImages(site, page) {
 }
 
 export default function (_formats = [
-  'avif',
-  'webp'
+  'webp',
+  'avif'
 ]) {
   formats = _formats;
 
