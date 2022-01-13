@@ -5,12 +5,7 @@ import { exists } from 'lume/deps/fs.ts';
 import { documentToString } from 'lume/core/utils.ts';
 
 const squooshTasks = [];
-
-const formats = [
-  'avif',
-  'webp',
-  'jpg'
-];
+let formats;
 
 const mimeTypes = {
   'avif': 'image/avif',
@@ -110,7 +105,12 @@ async function findAndOptimizeImages(site, page) {
   });
 }
 
-export default function () {
+export default function (_formats = [
+  'avif',
+  'webp'
+]) {
+  formats = _formats;
+
   return site => {
     site.process(['.html'], page => findAndOptimizeImages(site, page));
 
