@@ -45,7 +45,11 @@ The plugin will transform the <img> tag into a <picture> tag with the desired fo
   <img src="/img/2022-01-13-forodling-hyllis_600w.webp" alt="Förodlingsstation med IKEA Hyllis" width="600" sizes="600w" loading="lazy" decoding="async">
 </picture>
 ```
+  
+## Real world use case
 
 If you want a real world use-case example this plugin is used for my farm blog.
+  
 Live site: https://barlingshult.se
+  
 Source: https://github.com/enjikaka/barlingshult
