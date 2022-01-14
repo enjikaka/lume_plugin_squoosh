@@ -28,13 +28,15 @@ const site = lume();
 site.use(squoosh(['jxl', 'wp2']));
 ```
 
-Put your images like normal in the img directory and reference them in your post with an HTML-image tag and specify desired sizes with the `data-srcset` attribute.
+Put your images like normal in the img directory and reference them in your post with an HTML-image tag and specify desired sizes with the `width` and `data-srcset` attribute.
 
 ```html
 <img src="/img/2022-01-13-forodling-hyllis.jpg" width="600" data-srcset="1x, 1.5x, 2x" alt="Förodlingsstation med IKEA Hyllis">
 ```
 
-The plugin will transform the <img> tag into a <picture> tag with the desired formats:
+Make sure that `width` is the same as the actual final element with on your page, for loading performance reasons. `width="600"` and `data-srcset="1x, 1.5x, 2x"` above instructs the plugin to render sizes at 600px, 900px and 1200px.
+
+The plugin will transform the <img> tag into a <picture> tag with the desired formats from _config.js (or the default ones if not set) and with all the sizes:
 
 ```
 <picture title="Förodlingsstation med IKEA Hyllis">
@@ -42,3 +44,7 @@ The plugin will transform the <img> tag into a <picture> tag with the desired fo
   <source srcset="/img/2022-01-13-forodling-hyllis_600w.avif 600w, /img/2022-01-13-forodling-hyllis_900w.avif 900w, /img/2022-01-13-forodling-hyllis_1200w.avif 1200w" type="image/avif">
   <img src="/img/2022-01-13-forodling-hyllis_600w.webp" alt="Förodlingsstation med IKEA Hyllis" width="600" sizes="600w" loading="lazy" decoding="async"></picture>
 ```
+
+If you want a real world use-case example this plugin is used for my farm blog.
+Live site: https://barlingshult.se
+Source: https://github.com/enjikaka/barlingshult
