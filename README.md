@@ -42,7 +42,8 @@ The plugin will transform the <img> tag into a <picture> tag with the desired fo
 <picture title="Förodlingsstation med IKEA Hyllis">
   <source srcset="/img/2022-01-13-forodling-hyllis_600w.webp 600w, /img/2022-01-13-forodling-hyllis_900w.webp 900w, /img/2022-01-13-forodling-hyllis_1200w.webp 1200w" type="image/webp">
   <source srcset="/img/2022-01-13-forodling-hyllis_600w.avif 600w, /img/2022-01-13-forodling-hyllis_900w.avif 900w, /img/2022-01-13-forodling-hyllis_1200w.avif 1200w" type="image/avif">
-  <img src="/img/2022-01-13-forodling-hyllis_600w.webp" alt="Förodlingsstation med IKEA Hyllis" width="600" sizes="600w" loading="lazy" decoding="async"></picture>
+  <img src="/img/2022-01-13-forodling-hyllis_600w.webp" alt="Förodlingsstation med IKEA Hyllis" width="600" sizes="600w" loading="lazy" decoding="async">
+</picture>
 ```
 
 If you want a real world use-case example this plugin is used for my farm blog.
