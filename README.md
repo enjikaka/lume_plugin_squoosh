@@ -36,7 +36,7 @@ Put your images like normal in the img directory and reference them in your post
 
 Make sure that `width` is the same as the actual final element with on your page, for loading performance reasons. `width="600"` and `data-srcset="1x, 1.5x, 2x"` above instructs the plugin to render sizes at 600px, 900px and 1200px.
 
-The plugin will transform the <img> tag into a <picture> tag with the desired formats from _config.js (or the default ones if not set) and with all the sizes:
+The plugin will transform the `<img>` tag into a `<picture>` tag with the desired formats from _config.js (or the default ones if not set) and with all the sizes:
 
 ```html
 <picture title="Förodlingsstation med IKEA Hyllis">
