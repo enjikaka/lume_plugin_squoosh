@@ -38,7 +38,7 @@ Make sure that `width` is the same as the actual final element with on your page
 
 The plugin will transform the <img> tag into a <picture> tag with the desired formats from _config.js (or the default ones if not set) and with all the sizes:
 
-```
+```html
 <picture title="Förodlingsstation med IKEA Hyllis">
   <source srcset="/img/2022-01-13-forodling-hyllis_600w.webp 600w, /img/2022-01-13-forodling-hyllis_900w.webp 900w, /img/2022-01-13-forodling-hyllis_1200w.webp 1200w" type="image/webp">
   <source srcset="/img/2022-01-13-forodling-hyllis_600w.avif 600w, /img/2022-01-13-forodling-hyllis_900w.avif 900w, /img/2022-01-13-forodling-hyllis_1200w.avif 1200w" type="image/avif">
