@@ -9,7 +9,7 @@ Requires that you have Node installed for running Squoosh CLI via npx.
 In your Lume `_config.js` file import and add this plugin like so:
 
 ```js
-import squoosh from "https://deno.land/x/lume_plugin_squoosh@v0.0.8/index.js";
+import squoosh from "https://deno.land/x/lume_plugin_squoosh@v0.0.9/index.ts";
 
 const site = lume();
 
@@ -21,7 +21,7 @@ The squoosh method takes an optional parameter than is an array of formats to ge
 Example of editing output formats:
 
 ```js
-import squoosh from "https://deno.land/x/lume_plugin_squoosh@v0.0.8/index.js";
+import squoosh from "https://deno.land/x/lume_plugin_squoosh@v0.0.9/index.ts";
 
 const site = lume();
 
@@ -45,11 +45,11 @@ The plugin will transform the `<img>` tag into a `<picture>` tag with the desire
   <img src="/img/2022-01-13-forodling-hyllis_600w.webp" alt="Förodlingsstation med IKEA Hyllis" width="600" sizes="600w" loading="lazy" decoding="async">
 </picture>
 ```
-  
+
 ## Real world use case
 
 If you want a real world use-case example this plugin is used for my farm blog.
-  
+
 Live site: https://barlingshult.se
-  
+
 Source: https://github.com/enjikaka/barlingshult
