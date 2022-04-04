@@ -1,13 +1,12 @@
 import { posix, dirname, extname, basename } from 'lume/deps/path.ts';
-import { DOMParser } from 'lume/deps/dom.ts';
 import { exists } from 'lume/deps/fs.ts';
+import type { Site, Page } from 'lume/core.ts';
+import { HTMLDocument, Element } from "lume/deps/dom.ts";
 
-import { documentToString } from 'lume/core/utils.ts';
+const squooshTasks: string[] = [];
+let formats: string[];
 
-const squooshTasks = [];
-let formats;
-
-const mimeTypes = {
+const mimeTypes: Record<string, string> = {
   'avif': 'image/avif',
   'webp': 'image/webp',
   'jpg': 'image/jpeg',
@@ -15,27 +14,37 @@ const mimeTypes = {
   'jxl': 'image/jxl'
 };
 
-async function generatePictureElement(site, document, image) {
-  const url = posix.relative(site.options.location.pathname, image.getAttribute('src'));
-  const originalImageExtention = extname(url);
-  const filename = basename(image.getAttribute('src')).split(extname(image.getAttribute('src')))[0];
+async function generatePictureElement(site: Site, document: HTMLDocument, image: Element) {
+  const imgSrc = image.getAttribute('src');
+  const imgWidth = image.getAttribute('width');
 
-  const width = parseInt(image.getAttribute('width'), 10);
+  if (!imgSrc) {
+    throw new ReferenceError('Image is missing src: ' + image.outerHTML);
+  }
+
+  if (!imgWidth) {
+    throw new ReferenceError('Image is missing width: ' + image.outerHTML);
+  }
+
+  const url = posix.relative(site.options.location.pathname, imgSrc);
+  const originalImageExtention = extname(url);
+  const filename = basename(imgSrc).split(extname(imgSrc))[0];
+
+  const width = parseInt(imgWidth, 10);
   const srcset = image.getAttribute('data-srcset');
 
-  const sizes = srcset ?
+  const sizes: number[] = srcset ?
     srcset
       .split(',')
       .map(s => s.trim())
       .map(s => {
         if (s.includes('w')) {
           return parseInt(s, 10);
-        }
-        if (s.includes('x')) {
+        } else if (s.includes('x')) {
           return parseFloat(s) * width;
+        } else {
+          throw new TypeError('Invalid srcset on image: ' + image.outerHTML);
         }
-
-        return s;
       }) :
     [width, width * 1.5, width * 2];
 
@@ -74,9 +83,9 @@ async function generatePictureElement(site, document, image) {
     })
   );
 
-  squooshTasks.push(
-    ...tasks.filter(Boolean)
-  );
+  const definedTasks = tasks.filter(Boolean) as string[];
+
+  squooshTasks.push(...definedTasks);
 
   const picture = document.createElement('picture');
 
@@ -108,17 +117,20 @@ async function generatePictureElement(site, document, image) {
   return picture;
 }
 
-async function findAndOptimizeImages(site, page) {
-  const parser = new DOMParser();
-  const document = parser.parseFromString(page.content, 'text/html');
+function findAndOptimizeImages(site: Site, { document }: Page) {
+  if (document) {
+    const imgTags = [...document.querySelectorAll('img')];
 
-  [...document.querySelectorAll('img')].forEach(async image => {
-    const picture = await generatePictureElement(site, document, image);
+    return Promise.all(imgTags.map(async image => {
+      const picture = await generatePictureElement(site, document, image as Element);
 
-    image.parentNode.replaceChild(picture, image);
+      if (image && image.parentNode) {
+        image.parentNode.replaceChild(picture, image);
+      }
+    }));
+  }
 
-    page.content = documentToString(document);
-  });
+  return Promise.resolve();
 }
 
 /**
@@ -127,12 +139,12 @@ async function findAndOptimizeImages(site, page) {
  * @returns
  */
 export default function (_formats = [
-  'webp',
-  'avif'
+  'avif',
+  'webp'
 ]) {
   formats = _formats;
 
-  return site => {
+  return (site: Site) => {
     site.process(['.html'], page => findAndOptimizeImages(site, page));
 
     site.addEventListener('afterBuild', () => {
