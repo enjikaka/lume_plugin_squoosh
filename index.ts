@@ -24,7 +24,7 @@ async function generatePictureElement(site: Site, document: HTMLDocument, image:
 
   // Remote image, ignore.
   if (imgSrc.includes('http://') || imgSrc.includes('https://')) {
-    return;
+    return image;
   }
 
   if (!imgWidth) {
