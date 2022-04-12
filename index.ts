@@ -22,6 +22,11 @@ async function generatePictureElement(site: Site, document: HTMLDocument, image:
     throw new ReferenceError('Image is missing src: ' + image.outerHTML);
   }
 
+  // Remote image, ignore.
+  if (imgSrc.includes('http://') || imgSrc.includes('https://')) {
+    return;
+  }
+
   if (!imgWidth) {
     throw new ReferenceError('Image is missing width: ' + image.outerHTML);
   }
