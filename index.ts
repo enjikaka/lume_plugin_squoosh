@@ -80,11 +80,7 @@ async function generatePictureElement(site: Site, document: HTMLDocument, image:
         return undefined;
       }
 
-      return isMacOS ?
-        // macOS needs double wrapping around object.
-        `npx @squoosh/cli --resize '"{width: ${size}}"' ${formatOptions} --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}` :
-        // Linux fails on double wrapping, do single.
-        `npx @squoosh/cli --resize '{width: ${size}}' ${formatOptions} --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}`;
+      return `npx @squoosh/cli --resize '{width: ${size}}' ${formatOptions} --output-dir _cache/${dirname(url)}/ -s '_${size}w' ${url}`;
     })
   );
 
